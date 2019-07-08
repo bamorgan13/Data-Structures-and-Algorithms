@@ -157,7 +157,25 @@ function flatten(data) {
 // fileFinder(desktop, 'app_academy_logo.svg');     // => true
 // fileFinder(desktop, 'everlong.flac');            // => true
 // fileFinder(desktop, 'sequoia.jpeg');             // => false
-function fileFinder(directories, targetFile) {}
+function fileFinder(directories, targetFile) {
+	const keys = Object.keys(directories);
+	if (keys.includes(targetFile)) return true;
+
+	let found = false;
+	keys.some(key => {
+		found = directories[key] instanceof Object ? fileFinder(directories[key], targetFile) : false;
+		if (found) return true;
+	});
+	return found;
+
+	// aA Solution
+	// for(let key in directories) {
+	// 	if(key === targetFile || fileFinder(directories[key], targetFile)){
+	// 		return true;
+	// 	}
+	// }
+	// return false;
+}
 
 // Write another function, pathFinder(directories, targetFile), that returns the path that contains the targetFile.
 // If the targetFile is not found in the directories, then return null.
@@ -168,7 +186,17 @@ function fileFinder(directories, targetFile) {}
 // pathFinder(desktop, 'trixie_lou.jpeg'));     // => '/images/pets/trixie_lou.jpeg'
 // pathFinder(desktop, 'everlong.flac'));       // => '/music/genres/rock/everlong.flac'
 // pathFinder(desktop, 'honeybadger.png'));     // => null
-function pathFinder(directories, targetFile) {}
+function pathFinder(directories, targetFile) {
+	for (let key in directories) {
+		if (key === targetFile) {
+			return `/${key}`;
+		} else {
+			const path = pathFinder(directories[key], targetFile);
+			if (path) return key + path;
+		}
+	}
+	return null;
+}
 
 module.exports = {
 	lucasNumber,
